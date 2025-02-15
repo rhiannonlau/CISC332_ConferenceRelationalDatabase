@@ -1,0 +1,235 @@
+drop database if exists conferenceDB;
+create database conferenceDB;
+use conferenceDB;
+
+CREATE TABLE Member(
+    firstName VARCHAR(20) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    emailAddress VARCHAR(50),
+    PRIMARY KEY(firstName, lastName));
+
+CREATE TABLE OrganizingCommittee(
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY(name));
+
+CREATE TABLE SubCommittee(
+    name VARCHAR(50) NOT NULL,
+    oName VARCHAR(50) NOT NULL,
+    PRIMARY KEY(name),
+    FOREIGN KEY(oName) REFERENCES OrganizingCommittee(name) on delete cascade);
+
+CREATE TABLE Speaker(
+    firstName VARCHAR(20) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    PRIMARY KEY(firstName, lastName));
+
+CREATE TABLE Session(
+    name VARCHAR(100) NOT NULL,
+    roomLocation VARCHAR(20) NOT NULL,
+    startTime TIME NOT NULL,
+    endTime TIME NOT NULL,
+    date DATE NOT NULL,
+    PRIMARY KEY(name, startTime, date));
+
+CREATE TABLE Room(
+    roomNumber INTEGER NOT NULL,
+    numberOfBeds INTEGER NOT NULL,
+    PRIMARY KEY(roomNumber));
+
+CREATE TABLE Student(
+    firstName VARCHAR(20) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    attendanceRate DECIMAL(5,2) NOT NULL,
+    emailAddress VARCHAR(40),
+    rNumber INTEGER,
+    PRIMARY KEY(firstName, lastName),
+    FOREIGN KEY(rNumber) REFERENCES Room(roomNumber) on delete set null);
+
+CREATE TABLE Professional(
+    firstName VARCHAR(20) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    attendanceRate DECIMAL(5,2) NOT NULL,
+    emailAddress VARCHAR(40),
+    PRIMARY KEY(firstName, lastName));
+
+CREATE TABLE Company(
+    name VARCHAR(50) NOT NULL,
+    level VARCHAR(8) NOT NULL,
+    financialSupport DECIMAL(7,2) NOT NULL,
+    PRIMARY KEY(name));
+
+CREATE TABLE Sponsor(
+    firstName VARCHAR(20) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    attendanceRate DECIMAL(5,2) NOT NULL,
+    emailAddress VARCHAR(40),
+    cName VARCHAR(50) NOT NULL,
+    PRIMARY KEY(firstName, lastName),
+    FOREIGN KEY(cName) REFERENCES Company(name) on delete cascade);
+
+CREATE TABLE JobAd(
+    title VARCHAR(30) NOT NULL,
+    city VARCHAR(20) NOT NULL,
+    province VARCHAR(2) NOT NULL,
+    payRate DECIMAL(8,2),
+    cName VARCHAR(50) NOT NULL,
+    PRIMARY KEY(title, city, province, cName),
+    FOREIGN KEY(cName) REFERENCES Company(name) on delete cascade);
+
+CREATE TABLE EmailInfo(
+    emailsSent INTEGER,
+    maxEmails INTEGER NOT NULL,
+    cName VARCHAR(50) NOT NULL,
+    PRIMARY KEY(cName),
+    FOREIGN KEY(cName) REFERENCES Company(name) on delete cascade);
+
+CREATE TABLE MemberInSubCommittee(
+    mFirstName VARCHAR(20) NOT NULL,
+    mLastName VARCHAR(20) NOT NULL,
+    sName VARCHAR(50) NOT NULL,
+    role VARCHAR(7) NOT NULL,
+    PRIMARY KEY(mFirstName, mLastName, sName, role),
+    FOREIGN KEY(mFirstName, mLastName) REFERENCES Member(firstName, lastName) on delete cascade,
+    FOREIGN KEY(sName) REFERENCES SubCommittee(name) on delete cascade);
+
+CREATE TABLE SpeakerSpeaksAtSession(
+    spFirstName VARCHAR(20) NOT NULL,
+    spLastName VARCHAR(20) NOT NULL,
+    snName VARCHAR(50) NOT NULL,
+    snStart TIME NOT NULL,
+    snDate DATE NOT NULL,
+    PRIMARY KEY(spFirstName, spLastName, snName, snStart, snDate),
+    FOREIGN KEY(spFirstName, spLastName) REFERENCES Speaker(firstName, lastName) on delete cascade,
+    FOREIGN KEY(snName, snStart, snDate) REFERENCES Session(name, startTime, date) on delete cascade);
+
+insert into Member values
+('Richard', 'Grayson', 'grayson.d@outlook.com'),
+('Jason', 'Todd', 'jaytodd@outlook.com'),
+('Timothy', 'Drake', 'drake@outlook.com'),
+('Damian', 'Wayne', 'damian.wayne@outlook.com'),
+('Stephanie', 'Brown', 'steph.brown@outlook.com'),
+('Cassandra', 'Cain', 'cassw@outlook.com'),
+('Duke', 'Thomas', 'duke.thomas@outlook.com'),
+('Barbara', 'Gordon', 'barbaragrdn@outlook.com')
+;
+
+insert into OrganizingCommittee values
+('Wayne Enterprises Committee')
+;
+
+insert into SubCommittee values
+('Program Committee', 'Wayne Enterprises Committee'),
+('Registration Committee', 'Wayne Enterprises Committee'),
+('Sponsorship Committee', 'Wayne Enterprises Committee'),
+('Marketing Committee', 'Wayne Enterprises Committee'),
+('Financial Committee', 'Wayne Enterprises Committee'),
+('Outreach Committee', 'Wayne Enterprises Committee')
+;
+
+insert into Speaker values
+('Bette', 'Kane'),
+('Lois', 'Lane'),
+('Clark', 'Kent'),
+('Amanda', 'Spence'),
+('Ted', 'Kord'),
+('Jaime', 'Reyes'),
+('Timothy', 'Drake')
+;
+
+insert into Session values
+('Cosplay 101', 'Theatre G20', '120000', '140000', '2025-02-01'),
+('How to write a Pulitzer-winning article', 'Theatre H13', '120000', '150000', '2025-02-01'),
+('The story of Superman', 'Theatre G20', '141500', '164500', '2025-02-01'),
+('STAR Labs the future of biotechnology', 'Theatre G20', '141500', '164500', '2025-02-02'),
+('How to write a Pulitzer-winning article', 'Auditorium I14', '090000', '120000', '2025-02-02'),
+('Kord Industries introducing the beetle van', 'Room 205', '100000', '110000', '2025-02-02'),
+('Running a multi-billion dollar company at 16', 'Auditorium A03', '090000', '110000', '2025-02-02')
+;
+
+insert into Room values
+(101, 2),
+(102, 2),
+(103, 2),
+(104, 1),
+(105, 2),
+(106, 1)
+;
+
+insert into Student values
+('Duke', 'Thomas', '50.00', 'duke.thomas@outlook.com', null),
+('Stephanie', 'Brown', '50.00', 'steph.brown@outlook.com', null),
+('Artemis', 'Crock', '50.00', 'artemis.l.c@hotmail.com', 103),
+('Wally', 'West', '50.00', 'wrwest@gmail.com', 103),
+('Kori', 'Anders', '50.00', 'starkori@gmail.com', 104),
+('Garfield', 'Logan', '50.00', 'garlogan@gmail.com', 106)
+;
+
+insert into Professional values
+('Amanda', 'Spence', '100.00', 'drspence@gmail.com'),
+('Victor', 'Frieze', '100.00', 'drfrieze@gmail.com'),
+('Pamela', 'Isley', '100.00', 'dr.p.isley@hotmail.com'),
+('Harleen', 'Quinzel', '100.00', 'harlesq@hotmail.com'),
+('Jonathan', 'Crane', '100.00', 'crane.jonathan@gmail.com'),
+('Bette', 'Kane', '100.00', 'flamebird@gmail.com')
+;
+
+insert into Company values
+('Wayne Enterprises', 'Platinum', '15000.00'),
+('LexCorp', 'Bronze', '1000.00'),
+('Queen Industries', 'Gold', '6000.00'),
+('Stagg Enterprises', 'Gold', '8000.00'),
+('Kord Industries', 'Silver', '4000.00'),
+('Daily Planet', 'Bronze', '1000.00')
+;
+
+insert into Sponsor values
+('Timothy', 'Drake', '0.00', 'drake@outlook.com', 'Wayne Enterprises'),
+('Lex', 'Luther', '0.00', 'lexluther@hotmail.com', 'LexCorp'),
+('Dinah', 'Lance', '0.00', 'dinahlancequeen@gmail.com', 'Queen Industries'),
+('Sapphire', 'Stagg', '0.00', 'saphstagg@gmail.com', 'Stagg Enterprises'),
+('Ted', 'Kord', '0.00', 'thekord@hotmail.com', 'Kord Industries'),
+('Jaime', 'Reyes', '0.00', 'jaimereyes@gmail.com', 'Kord Industries'),
+('Lois', 'Lane', '0.00', 'loislane@dailyplanet.com', 'Daily Planet'),
+('Clark', 'Kent', '0.00', 'clarkkent@dailyplanet.com', 'Daily Planet')
+;
+
+insert into JobAd values
+('Engineer', 'Gotham', 'ON', '100000.00', 'Wayne Enterprises'),
+('Social Media Specialist', 'Gotham', 'ON', '80000.00', 'Wayne Enterprises'),
+('Reporter', 'Metropolis', 'BC', '75000.00', 'Daily Planet'),
+('Engineer', 'Star City', 'AB', '100000.00', 'Queen Industries'),
+('Mechanic', 'Star City', 'AB', '100000.00', 'Queen Industries'),
+('Marketing Expert', 'Metropolis', 'BC', '80000.00', 'LexCorp')
+;
+
+insert into EmailInfo values
+(2, 5, 'Wayne Enterprises'),
+(0, 0, 'LexCorp'),
+(2, 4, 'Queen Industries'),
+(1, 4, 'Stagg Enterprises'),
+(3, 3, 'Kord Industries'),
+(0, 0, 'Daily Planet')
+;
+
+insert into MemberInSubCommittee values
+('Richard', 'Grayson', 'Sponsorship Committee', 'Chair'),
+('Richard', 'Grayson', 'Financial Committee', 'Member'),
+('Jason', 'Todd', 'Outreach Committee', 'Chair'),
+('Timothy', 'Drake', 'Program Committee', 'Member'),
+('Damian', 'Wayne', 'Sponsorship Committee', 'Member'),
+('Stephanie', 'Brown', 'Marketing Committee', 'Chair'),
+('Cassandra', 'Cain', 'Marketing Committee', 'Member'),
+('Duke', 'Thomas', 'Program Committee', 'Chair'),
+('Barbara', 'Gordon', 'Financial Committee', 'Chair')
+;
+
+insert into SpeakerSpeaksAtSession values
+('Bette', 'Kane', 'Cosplay 101', '120000', '2025-02-01'),
+('Lois', 'Lane', 'How to write a Pulitzer-winning article', '120000', '2025-02-01'),
+('Clark', 'Kent', 'The story of Superman', '141500', '2025-02-01'),
+('Amanda', 'Spence', 'STAR Labs the future of biotechnology', '141500', '2025-02-02'),
+('Lois', 'Lane', 'How to write a Pulitzer-winning article', '090000', '2025-02-02'),
+('Ted', 'Kord', 'Kord Industries introducing the beetle van', '100000', '2025-02-02'),
+('Jaime', 'Reyes', 'Kord Industries introducing the beetle van', '100000', '2025-02-02'),
+('Timothy', 'Drake', 'Running a multi-billion dollar company at 16', '090000', '2025-02-02')
+;
