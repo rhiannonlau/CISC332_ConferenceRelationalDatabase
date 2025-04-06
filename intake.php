@@ -2,14 +2,14 @@
 <head>
     <meta charset="utf-8">
     <title>Conference - Intake</title>
-    <link rel="stylesheet" href="conference.css">
+    <link rel="stylesheet" href="media/conference.css">
 </head>
 
-<body>
+<body class="center" style="padding-top: 50px;">
     <?php
         include 'connectdb.php';
     ?>
-    <h2>Intake</h2>
+    <h1>Intake</h1>
     <?php
         // total registration amount
         $query = 'SELECT SUM(attendanceRate) FROM Student';
@@ -62,8 +62,8 @@
         }
 
         // display amounts
-        echo "<p>Total registration amount: $" . $registration . "</p>";
-        echo "<p>Total sponsorship amount: $" . $sponsorship . "</p>";
+        echo "<p font-size: 18px>Total registration amount: $" . $registration . "</p>";
+        echo "<p font-size: 18px>Total sponsorship amount: $" . $sponsorship . "</p>";
     ?>
 
     <form action="conference.php">

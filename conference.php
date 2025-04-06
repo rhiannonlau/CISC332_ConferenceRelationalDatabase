@@ -2,122 +2,65 @@
 <head>
     <meta charset="utf-8">
     <title>Conference</title>
-    <link rel="stylesheet" href="conference.css">
+    <link rel="stylesheet" href="media/conference.css">
 </head>
 
 <body>
 <?php
 include 'connectdb.php' ;
 ?>
-    <h1>Conference</h1>
-    <!-- <h2>Members</h2> -->
-    <?php
-    // include 'getdata.php';
-    ?>
-    <h2>Companies</h2>
-    <form action="getjobsbycompany.php" method="post">
-        <?php
-            include 'getdata.php';
-        ?>
-    <input type="submit" value="View jobs">
-    </form>
-    <!-- <p>
-    <hr>
-    <p>
-    <h2> Add a new attendee</h2>
-    <form action="addnewattendee.php" method="post">
-        First Name: <input type="text" name="attendeefname"><br>
-        Last Name: <input type="text" name="attendeelname"><br>
-        Role: <br>
-        <input type="radio" name="role" value="student">Student<br>
-        <input type="radio" name="role" value="professional">Professional<br>
-        <input type="radio" name="role" value="sponsor">Sponsor<br>
-        <input type="submit" value="Add Attendee">
-    </form> -->
+<div class="sidebar">
+    <h2>Records</h2>
+    <a href="subcommittees.php">Sub-Committees</a>
+    <a href="attendees.php">Attendees</a>
+    <a href="schedule.php">Schedules</a>
+    <a href="intake.php">Intake</a>
+    <a href="jobs.php">Jobs</a>
+    <a href="rooms.php">Rooms</a>
+    <a href="sponsors.php">Sponsors</a>
+    <p style="position: fixed; bottom: 0; padding: 10px;">
+        Rhiannon Lau</br>
+    </p>
+</div>
+<div class="main">
+    <h1>Conference Relational Database</h1>
     
-    <p>
+    <p style="font-size: 18px">Welcome to the Conference Relational Database, where you can access and change information ahead of your conference.</br>To get started, try navigating to one of the sub-pages using the sidebar on the left.</p>
+    </br>
+    </br>
+    <img src="media/meeting line art.jpg" alt="Meeting line art">
+    </br>
+    </br>
     <hr>
-    <p>
-
-    <h2>Jobs</h2>
-    <form action="jobs.php" method="post">
-        <input type="submit" value="View jobs">
-    </form>
-
-    <p>
-    <hr>
-    <p>
-
-    <h2>Sponsors</h2>
-    <form action="sponsors.php" method="post">
-        <input type="submit" value="View sponsors">
-    </form>
-    <p>
-    <hr>
-    <p>
-
-    <h2>Attendees</h2>
-    <form action="attendees.php" method="post">
-        <input type="submit" value="View attendees">
-    </form>
-    <p>
-    <hr>
-    <p>
-
-    <h2>Sub-Committees</h2>
-    <form action="subcommittees.php" method="post">
-        <input type="submit" value="View Sub-Committees">
-    </form>
-    <p>
-    <hr>
-    <p>
-
-    <h2>Rooms</h2>
-    <form action="rooms.php" method="post">
-        <input type="submit" value="View Rooms">
-    </form>
-    <p>
-    <hr>
-    <p>
-
-    <h2>Schedules</h2>
-    <form action="schedule.php" method="post">
-        <input type="submit" value="View Schedule">
-    </form>
-    <p>
-    <hr>
-    <p>
-
-    <h2>Intake</h2>
-    <form action="intake.php" method="post">
-        <input type="submit" value="View Intake">
-    </form>
-    <p>
-    <hr>
-    <p>
-
-    
-    <h3>Thank you to our sponsors:</h3>
+    </br>
+    <h3>Special thank you to our sponsors:</h3>
     <?php
         $query = 'SELECT name FROM Company ORDER BY financialSupport DESC';
         $result = $connection->query($query);
-        
+
+        $names = [];
         while ($row = $result->fetch())
         {
-            if ($row != end($row))
-            {
-                echo $row["name"] . ", ";
+            $names[] = $row['name'];
+        }
+        
+        echo "<p style='font-size: 18px;'>";
+        for ($i = 0; $i < count($names); $i++)
+        {
+            if ($i == count($names) - 1) {
+                echo "and " . $names[$i] . ".";
             }
             
-            else
-            {
-                echo "and " . $row["name"];
+            else {
+                echo $names[$i] . ", ";
             }
         }
+        echo "</p>";
     ?>
+</div>
 
 <?php
-        $connection =- NULL;
+        $connection = NULL;
     ?>
 </body>
 </html>

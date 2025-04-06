@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Conference - Sub-Committees</title>
-    <link rel="stylesheet" href="conference.css">
+    <link rel="stylesheet" href="media/conference.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
         $selectedFilter = isset($_POST["filter"]) ? $_POST["filter"] : "All Sub-Committees";
     ?>
     <form method="post" action="">
-        Filter by
+        <p>Filter by 
         <select name="filter" onchange="this.form.submit()">
         <?php
             $query = 'SELECT * FROM SubCommittee';
@@ -44,6 +44,7 @@
             }
         ?>
         </select>
+        </p>
     </form>
         </br>
     <table>
@@ -87,7 +88,7 @@
     ?>
     </table>
     </br>
-    <form action="conference.php">
+    <form action="conference.php" class="center">
         <input type="submit" name="return" value="Return"></input>
     </form>
     <?php

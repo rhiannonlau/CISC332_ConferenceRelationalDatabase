@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Conference - Job Listings</title>
-    <link rel="stylesheet" href="conference.css">
+    <link rel="stylesheet" href="media/conference.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
         $selectedFilter = isset($_POST["filter"]) ? $_POST["filter"] : "All Companies";
     ?>
     <form method="post" action="">
-        Filter by
+        <p>Filter by 
         <select name="filter" onchange="this.form.submit()">
         <?php
             $query = 'SELECT * FROM Company';
@@ -44,6 +44,7 @@
             }
         ?>
         </select>
+        </p>
     </form>
         </br>
     <table>
@@ -100,7 +101,7 @@
     ?>
     </table>
     </br>
-    <form action="conference.php">
+    <form action="conference.php" class="center">
         <input type="submit" name="return" value="Return"></input>
     </form>
     <?php

@@ -162,67 +162,36 @@
             $email = $_POST["attendeeemail"];
             $role = $_POST["attendeerole"];
 
-            
-
-            
-
-            $query = 'SELECT firstName, lastName FROM Sponsor WHERE firstName="' . $fName . '" AND lastName = "'. $lName . '"';
-            $resultSp = $connection->query($query);
-
             if ($role == "Student")
             {
-                // check that there doesn't already exist a student with this name to prevent double inserts on page reloads
-                $query = 'SELECT firstName, lastName FROM Student WHERE firstName="' . $fName . '" AND lastName = "'. $lName . '"';
+                // pick a room that has space and put them in it
+                $query = 'SELECT r.roomNumber FROM Room r
+                    LEFT JOIN Student s ON r.roomNumber = s.rNumber
+                    GROUP BY r.roomNumber, r.numberOfBeds
+                    HAVING COUNT(s.rNumber) < r.numberOfBeds;';
                 $result = $connection->query($query);
-                $result = $result->fetch();
+                $room = $result->fetch()["roomNumber"]; // get the first room
 
-                if (!$result)
-                {
-                    // pick a room that has space and put them in it
-                    $query = 'SELECT r.roomNumber FROM Room r
-                        LEFT JOIN Student s ON r.roomNumber = s.rNumber
-                        GROUP BY r.roomNumber, r.numberOfBeds
-                        HAVING COUNT(s.rNumber) < r.numberOfBeds;';
-                    $result = $connection->query($query);
-                    $room = $result->fetch()["roomNumber"]; // get the first room
-
-                    $query = 'INSERT INTO Student values("' . $fName . '","' . $lName . '",50.00,"' . $email . '","' . $room . '")';
-                    $numRows = $connection->exec($query);
-                }
+                $query = 'INSERT INTO Student values("' . $fName . '","' . $lName . '",50.00,"' . $email . '","' . $room . '")';
+                $numRows = $connection->exec($query);
             }
 
             elseif ($role == "Professional")
             {
-                // check that there doesn't already exist a professional with this name to prevent double inserts on page reloads
-                $query = 'SELECT firstName, lastName FROM Professional WHERE firstName="' . $fName . '" AND lastName = "'. $lName . '"';
-                $result = $connection->query($query);
-                $result = $result->fetch();
-
-                if (!$result)
-                {
-                    $query = 'INSERT INTO Professional values("' . $fName . '","' . $lName . '",100.00,"' . $email . '")';
-                    $numRows = $connection->exec($query);
-                }
+                $query = 'INSERT INTO Professional values("' . $fName . '","' . $lName . '",100.00,"' . $email . '")';
+                $numRows = $connection->exec($query);
             }
 
             elseif ($role == "Sponsor")
             {
-                // check that there doesn't already exist a sponsor with this name to prevent double inserts on page reloads
-                $query = 'SELECT firstName, lastName FROM Sponsor WHERE firstName="' . $fName . '" AND lastName = "'. $lName . '"';
-                $result = $connection->query($query);
-                $result = $result->fetch();
-
-                if (!$result)
-                {
-                    $company = $_POST["company"];
-                    $query = 'INSERT INTO Sponsor values("' . $fName . '","' . $lName . '",0.00,"' . $email . '","' . $company . '")';
-                    $numRows = $connection->exec($query);
-                }
+                $company = $_POST["company"];
+                $query = 'INSERT INTO Sponsor values("' . $fName . '","' . $lName . '",0.00,"' . $email . '","' . $company . '")';
+                $numRows = $connection->exec($query);
             }
 
             // force refresh to reflect changes
-            // header("Location: " . $_SERVER['PHP_SELF']);
-            // exit();
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
         }
     ?>
 

@@ -100,7 +100,7 @@ CREATE TABLE SpeakerSpeaksAtSession(
     snDate DATE NOT NULL,
     PRIMARY KEY(spFirstName, spLastName, snName, snStart, snDate),
     FOREIGN KEY(spFirstName, spLastName) REFERENCES Speaker(firstName, lastName) on delete cascade,
-    FOREIGN KEY(snName, snStart, snDate) REFERENCES Session(name, startTime, date) on delete cascade);
+    FOREIGN KEY(snName, snStart, snDate) REFERENCES Session(name, startTime, date) on delete cascade on update cascade);
 
 insert into Member values
 ('Richard', 'Grayson', 'grayson.d@outlook.com'),
